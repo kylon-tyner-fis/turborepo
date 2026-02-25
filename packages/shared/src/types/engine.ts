@@ -1,22 +1,7 @@
 import { z } from "zod";
 import { TRIGGER_TYPES } from "../constants";
 import { NodeSchema } from "../schemas/node";
-
-/**
- * 1. Widget State Value
- * Defines exactly what data a widget is allowed to emit.
- * Replaces 'any' with a safe union of primitives and structures.
- */
-export const WidgetStateValueSchema = z.union([
-  z.string(),
-  z.number(),
-  z.boolean(),
-  z.record(z.string(), z.unknown()),
-  z.array(z.unknown()),
-  z.null(),
-]);
-
-export type WidgetStateValue = z.infer<typeof WidgetStateValueSchema>;
+import { WidgetStateValueSchema } from "../schemas/widget";
 
 /**
  * 2. State Snapshot
