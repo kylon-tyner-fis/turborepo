@@ -4,11 +4,12 @@
 import { useCallback, useState } from "react";
 import {
   ToolNode,
-  StateSnapshot,
   EngineResponse,
   WidgetStateValue,
+  EvaluationRequest,
 } from "@repo/shared";
 import { NodeRenderer } from "@/components/NodeRenderer";
+import { evaluateWorkAction } from "@/actions/evaluate";
 
 /**
  * MOCK INITIAL DATA
@@ -84,23 +85,17 @@ export default function LearningPage() {
 
     setIsEvaluating(true);
 
-    const snapshot: StateSnapshot = {
-      active_node_id: currentNode.id,
-      widget_states: widgetStates,
-      trigger_type: "EXPLICIT",
+    const request: EvaluationRequest = {
+      snapshot: {
+        active_node_id: currentNode.id,
+        widget_states: widgetStates,
+        trigger_type: "EXPLICIT",
+      },
+      node_context: currentNode,
     };
 
     try {
-      const res = await fetch("/api/evaluate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(snapshot),
-      });
-
-      if (!res.ok) throw new Error("Network response was not ok");
-
-      // Typed cast ensures we have full Intellisense on the AI's response
-      const result = (await res.json()) as EngineResponse;
+      const result: EngineResponse = await evaluateWorkAction(request);
 
       // Handle Navigation logic
       if (
