@@ -41,5 +41,6 @@ export async function runEvaluation(
   });
 
   const aiContent = completion.choices[0].message.content || "{}";
+  setTimeout(() => console.log("AI CONTENT:", aiContent), 5000);
   return EngineResponseSchema.parse(JSON.parse(aiContent));
 }
